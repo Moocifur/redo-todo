@@ -1,4 +1,166 @@
 /* styles.css */
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    background-color: rebeccapurple;
-  }  
+  font-family: Arial, sans-serif;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header styles */
+header {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #404040;
+}
+
+/* Main content layout */
+main {
+  display: flex;
+  flex: 1;
+}
+
+/* Projects sidebar */
+.projects {
+  width: 250px;
+  background: #2d2d2d;
+  padding: 1.5rem;
+  border-right: 1px solid #404040;
+}
+
+/* Todos section */
+.todos {
+  flex: 1;
+  background: #2d2d2d;
+  padding: 1.5rem;
+}
+
+/* Common styles */
+h2 {
+  margin-bottom: 1rem;
+  color: #e0e0e0;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #404040;
+  color: #e0e0e0;
+  border: none;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #505050;
+}
+
+.project-list, .todo-list {
+  margin: 1rem 0;
+}
+
+.project-list div {
+  padding: 0.75rem;
+  margin-bottom: 05rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.project-list div:hover {
+  background-color: #404040;
+}
+
+/*Selected project styling */
+.project-list div.selected {
+  background-color: #404040;
+  border-left: 3px solid #e0e0e0;
+}
+
+/* Todo item styling */
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  background-color: #2d2d2d;
+  border-left: 3px solid;
+}
+
+.priority-high { border-left-color: #ff4d4d; }
+.priority-medium { border-left-color: #ffd700; }
+.priority-low { border-left-color: #4CAF50; }
+
+.todo-content {
+  flex: 1;
+}
+
+.todo-title {
+  font-weight: bold;
+}
+
+.todo-date {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.delete-todo {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+.delete-todo:hover {
+  color: #ff4d4d;
+}
+
+.todo-item.completed .todo-title {
+  text-decoration: line-through;
+  color: #666;
+}
+
+.todo-checkbox {
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.todo-info {
+  flex: 1;
+}
+
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  cursor: pointer;
+}
+
+.project-name {
+  flex: 1;
+}
+
+.delete-project {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.project-item:hover .delete-project {
+  opacity: 1;
+}

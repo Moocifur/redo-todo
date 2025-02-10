@@ -1,11 +1,37 @@
+<!-- template.html  -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Todo List</title>
 </head>
 <body>
-    <h1>Heeeeeee</h1>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Todo List</h1>
+        </header>
+
+        <main>
+            <!-- Projects sidebar -->
+            <aside class="projects">
+                <h2>Projects</h2>
+                <div class="project-list">
+                    <!-- Projects will be added here dynamically -->
+                </div>
+                <button id="new-project">New Project</button>
+            </aside>
+
+            <!-- Todos section -->
+            <section class="todos">
+                <h2>Tasks</h2>
+                <div class="todo-list">
+                    <!-- Todos will be added here dynamically -->
+                </div>
+                <button id="new-todo">New Task</button>
+            </section>
+        </main>
+    </div>
 </body>
 </html>
