@@ -20,6 +20,23 @@
                 <div class="project-list">
                     <!-- Projects will be added here dynamically -->
                 </div>
+
+                <!-- Project Form -->
+                <div class="project-form-container hidden">
+                    <form id="project-form">
+                        <input
+                            type="text"
+                            id="project-name"
+                            name="project-name"
+                            placeholder="Project Name"
+                            required
+                        >
+                        <div class="form-buttons">
+                            <button type="submit" class="btn-submit">Add Project</button>
+                            <button type="button" class="btn0cancel">Cancel</button>
+                        </div>    
+                    </form>
+                </div>
                 <button id="new-project">New Project</button>
             </aside>
 
@@ -29,6 +46,42 @@
                 <div class="todo-list">
                     <!-- Todos will be added here dynamically -->
                 </div>
+
+                <!-- Todo Form -->
+                 <div class="todo-form-container hidden">
+                    <form id="todo-form">
+                        <input
+                            type="text"
+                            id="todo-title"
+                            name="todo-title"
+                            placeholder="Task Title"
+                            required
+                        >
+                        <textarea
+                            id="todo-description"
+                            name="todo-description"
+                            placeholder="Description"
+                            rows="3"
+                        ></textarea>
+                        <input
+                            type="date"
+                            id="todo-date"
+                            name="todo-date"
+                        >
+                        <select
+                            id="todo-priority"
+                            name="todo-priority"
+                        >
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn-submit">Add Task</button>
+                            <button type="button" class="btn-cancel">Cancel</button>
+                        </div>            
+                    </form>
+                 </div>
                 <button id="new-todo">New Task</button>
             </section>
         </main>

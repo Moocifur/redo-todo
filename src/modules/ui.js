@@ -79,6 +79,16 @@ const UI = (() => {
         const savedProjects = Storage.loadProjects();
         const lastActiveProject = Storage.loadCurrentProject();
 
+        // If no saved projects (first time suer), create default project
+        if (savedProjects.length === 0) {
+            const defaultProject = Project('Default');
+            projects.push(defaultProject);
+            displayProject(defaultProject);
+            currentProject = defaultProject;
+            saveProjects();
+            return;
+        }
+
         savedProjects.forEach(projectData => {
             const project = Project(projectData.name);
 
