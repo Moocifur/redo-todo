@@ -11,6 +11,12 @@ const UI = (() => {
     const newProjectBtn = document.querySelector('#new-project');
     const newTodoBtn = document.querySelector('#new-todo');
 
+    // Cache Form
+    const todoFormContainer = document.querySelector('.todo-form-container');
+    const projectFormContainer = document.querySelector('.project-form-container');
+    const todoForm = document.querySelector('#todo-form');
+    const projectForm = document.querySelector('#project-form');
+
     // Track state
     let currentProject = null;
     let projects = []; // Add this to track all projects
@@ -19,17 +25,51 @@ const UI = (() => {
     function initializeListeners() {
         newProjectBtn.addEventListener('click', createNewProject);
         newTodoBtn.addEventListener('click', createNewTodo);
+
+        // Add form cancel button listeners
+        const projectCancelBtn = projectForm.querySelector('.btn-cancel');
+        const todoCancelBtn = todoForm.querySelector('.btn-cancel');
+    
+        projectCancelBtn.addEventListener('click', () => {
+            projectFormContainer.classList.add('hidden');
+            projectForm.reset();
+        });
+    
+        todoCancelBtn.addEventListener('click', () => {
+            todoFormContainer.classList.add('hidden');
+            todoForm.reset();
+        });
+        
         loadProjects(); // Load saved projects when app starts
     }
 
     // Project Creation and Display
     function createNewProject() {
-        const projectName = prompt('Enter project name:');
-        if (projectName) { // Only create if user entered a name
-            const project = Project(projectName); // Create new project using our factory
-            projects.push(project); // Add to projects array
-            displayProject(project); // Show it on the page
-            saveProjects(); // Save after creating new project
+        projectFormContainer.classList.remove('hidden');
+        // Remove any existing listener before adding a new one
+        projectForm.removeEventListener('submit', handleProjectSubmit);
+        projectForm.addEventListener('submit', handleProjectSubmit);
+
+        const cancelBtn = projectForm.querySelector('.btn-cancel');
+        cancelBtn.addEventListener('click', () => {
+            projectFormContainer.classList.add('hidden');
+            projectForm.reset();
+        });
+    }
+
+    //Handle project form submission
+    function handleProjectSubmit(e) {
+        e.preventDefault();
+        const projectName = projectForm.querySelector('#project-name').value;
+
+        if (projectName) {
+            const project = Project(projectName);
+            projects.push(project);
+            displayProject(project);
+            saveProjects();
+
+            projectFormContainer.classList.add('hidden');
+            projectForm.reset();
         }
     }
 
@@ -100,6 +140,9 @@ const UI = (() => {
                     todoData.dueDate,
                     todoData.priority
                 );
+                if (todoData.completed) {
+                    todo.toggleComplete();
+                }
                 project.addTodo(todo);
             });
 
@@ -136,27 +179,19 @@ const UI = (() => {
             return;
         }
 
-        // Get todo details from user
-        const title = prompt('Enter todo title:');
+        todoFormContainer.classList.remove('hidden');
+        // Remove any existing listener before adding a new one
+        todoForm.removeEventListener('submit', handleTodoSubmit);
+        todoForm.addEventListener('submit', handleTodoSubmit);
 
-        //If user cancels or enters empty title, exit the function
-        if (!title) return;
-
-        const description = prompt('Enter description:') || ''; // Default to empty string if cancelled
-        const dueDate = prompt('Enter due date:');
-        if (!dueDate) return; // would prefer if we didnt force people to have a due date tho
-
-        const priority = prompt('Enter priority (High/Medium/Low):');
-        if (!priority || !['High', 'Medium', 'Low'].includes(priority)) {
-            alert('Please enter a valid priority (High/Medium/Low');
-            return; //Prefer if we also didnt force people to enter a thing, would rather it defaulted to something
-        }
-
-        const todo = Todo(title, description, dueDate, priority);
-        currentProject.addTodo(todo);
-        displayTodos(currentProject.getTodos());
-        saveProjects();
+        // const cancelBtn = todoForm.querySelector('.btn-cancel');
+        // cancelBtn.addEventListener('click', () => {
+        //     todoFormContainer.classList.add('hidden');
+        //     todoForm.reset();
+        // });
     }
+
+
 
     // Refractor for checkmarks!
     function displayTodos(todos) {
@@ -198,24 +233,32 @@ const UI = (() => {
             const editBtn = div.querySelector('.edit-todo');
             editBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const newTitle = prompt('Enter new title:', todo.title);
-                if (!newTitle) return // If cancelled or empty, keep original
+                todoFormContainer.classList.remove('hidden');
 
-                const newDescription = prompt('Enter new description:', todo.description) || todo.description;
+                // Pre-fill the form with current values
+                todoForm.querySelector('#todo-title').value = todo.title;
+                todoForm.querySelector('#todo-description').value = todo.description;
+                todoForm.querySelector('#todo-date').value = todo.dueDate;
+                todoForm.querySelector('#todo-priority').value = todo.priority;
 
-                const newDueDate = prompt('Enter new due date:', todo.dueDate);
-                if (!newDueDate) return;
-               
-                const newPriority = prompt('Enter new priority (High/Medium/Low):', todo.priority);
-                if (!newPriority || !['High', 'Medium', 'Low'].includes(newPriority)) {
-                    alert('Please enter a valid priority (High/Medium/Low');
-                    return;
-                }
+                // Remove any existing submit listeners and add new one for editing
+                todoForm.removeEventListener('submit', handleTodoSubmit);
+                todoForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
 
-                todo.edit(newTitle, newDescription, newDueDate, newPriority);
-                displayTodos(currentProject.getTodos());
-                saveProjects();
-            });
+                    const newTitle = todoForm.querySelector('#todo-title').value;
+                    const newDescription = todoForm.querySelector('#todo-description').value;
+                    const newDueDate = todoForm.querySelector('#todo-date').value;
+                    const newPriority = todoForm.querySelector('#todo-priority').value;
+
+                    todo.edit(newTitle, newDescription, newDueDate, newPriority);
+                    displayTodos(currentProject.getTodos());
+                    saveProjects();
+
+                    todoFormContainer.classList.add('hidden');
+                    todoForm.reset();
+                }, { once: true }); // Ensure the listener is removed after use
+            })
 
             // Add delete functionality
             const deleteBtn = div.querySelector('.delete-todo');
@@ -229,6 +272,23 @@ const UI = (() => {
 
             todoList.appendChild(div);
         });
+    }
+
+    function handleTodoSubmit(e) {
+        e.preventDefault();
+
+        const title = todoForm.querySelector('#todo-title').value;
+        const description = todoForm.querySelector('#todo-description').value;
+        const dueDate = todoForm.querySelector('#todo-date').value;
+        const priority = todoForm.querySelector('#todo-priority').value;
+
+        const todo = Todo(title, description, dueDate, priority);
+        currentProject.addTodo(todo);
+        displayTodos(currentProject.getTodos());
+        saveProjects();
+
+        todoFormContainer.classList.add('hidden');
+        todoForm.reset();
     }
 
     // Public methods
